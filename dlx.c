@@ -138,36 +138,43 @@ void delete_rhead(struct node *h)
 
 int main()
 {
-    struct node *h = init(6, 7);
-    struct node **solution = (struct node **) malloc(6 * sizeof(struct node *));
+    struct node *h = init(729, 324);
+    struct node **solution = (struct node **) malloc(81 * sizeof(struct node *));
     int j;
-    for (j = 0; j < 6; j++) {
+    for (j = 0; j < 81; j++) {
         solution[j] = NULL;
     }
 
-    insert(h, 0, 0);
-    insert(h, 0, 3);
-    insert(h, 0, 6);
-    insert(h, 1, 0);
-    insert(h, 1, 3);
-    insert(h, 2, 3);
-    insert(h, 2, 4);
-    insert(h, 2, 6);
-    insert(h, 3, 2);
-    insert(h, 3, 4);
-    insert(h, 3, 5);
-    insert(h, 4, 1);
-    insert(h, 4, 2);
-    insert(h, 4, 5);
-    insert(h, 4, 6);
-    insert(h, 5, 1);
-    insert(h, 5, 6);
+    int i, k;
+    for (i = 0; i < 9; i++)
+        for (j = 0; j < 9; j++)
+            for (k = 0; k < 9; k++) {
+                insert(h, i*81 + j*9 + k, i*9 + j);
+                insert(h, i*81 + j*9 + k, 81 + 9*i + k);
+                insert(h, i*81 + j*9 + k, 162 + 9*j + k);
+                insert(h, i*81 + j*9 + k, 243 + (3*(i/3) + j/3) * 9 + k);
+            }
 
     delete_rhead(h);
-    if(    search(h, 0, solution))
-        printf("hello\n");
-    int i;
-    for (i = 0; solution[i] != NULL; i++)
-        printf("%d\n", solution[i]->r);
+    search(h, 0, solution);
+
+
+    int solved[9][9] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+    int row, col, num;
+    for (i = 0; i < 81 && solution[i] != NULL; i++) {
+        row = (solution[i]->r)/81;
+        col = (solution[i]->r - row* 81)/9;
+        num = (solution[i]->r)%9 + 1;
+        solved[row][col] = num;
+    }
+
+
+    for (i = 0; i < 9; i++) {
+        for (j = 0; j < 9; j++)
+            printf("%d", solved[i][j]);
+        printf("\n");
+    }
+
     return 0;
 }
